@@ -16,8 +16,12 @@ import org.nil.movieMania.core.Movie;
 import org.nil.movieMania.db.MovieDAO;
 
 import io.dropwizard.hibernate.UnitOfWork;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @Path("/movies")
+@Api("/movies")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class MovieResource implements MovieApi {
@@ -30,6 +34,12 @@ public class MovieResource implements MovieApi {
 
 	@GET
 	@UnitOfWork
+	@ApiOperation(
+            value = "Get all the movies",
+            notes = "Movies reflect only if it's entered into the local mysql database",
+            response = List.class,
+            httpMethod = "GET"
+    )
 	@Override
 	public List<Movie> getAllMovies() {
 		return movieDAO.findAll();
@@ -38,15 +48,27 @@ public class MovieResource implements MovieApi {
 	@GET
 	@Path("/{id}")
 	@UnitOfWork
+	@ApiOperation(
+            value = "Get movies by id",
+            notes = "Id is auto generated when movie entry is made in local database",
+            response = Movie.class,
+            httpMethod = "GET"
+    )
 	@Override
-	public Optional<Movie> getMovieById(@PathParam("id") int id) {
+	public Optional<Movie> getMovieById(@ApiParam @PathParam("id") int id) {
 		return movieDAO.findById(id);
 	}
 
 	@POST
 	@UnitOfWork
+	@ApiOperation(
+            value = "add a movie to local database",
+            notes = "Id needs not to be passed, it will be aauto generated",
+            response = Movie.class,
+            httpMethod = "POST"
+    )
 	@Override
-	public Movie addMovie(Movie movie) {
+	public Movie addMovie(@ApiParam Movie movie) {
 		return movieDAO.save(movie);
 	}	
 }

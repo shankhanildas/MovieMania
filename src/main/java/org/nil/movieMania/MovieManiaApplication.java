@@ -9,6 +9,8 @@ import io.dropwizard.db.PooledDataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.federecio.dropwizard.swagger.SwaggerBundle;
+import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 
 public class MovieManiaApplication extends Application<MovieManiaConfiguration> {
 
@@ -17,6 +19,13 @@ public class MovieManiaApplication extends Application<MovieManiaConfiguration> 
 		@Override
 		public PooledDataSourceFactory getDataSourceFactory(MovieManiaConfiguration conf) {
 			return conf.getDataSourceFactory();
+		}
+	};
+	
+	private final SwaggerBundle<MovieManiaConfiguration> swaggerBundle = new SwaggerBundle<MovieManiaConfiguration>() {
+		@Override
+		protected SwaggerBundleConfiguration getSwaggerBundleConfiguration(MovieManiaConfiguration conf) {
+			return conf.getSwaggerBundleConfiguration();
 		}
 	};
 	
@@ -32,6 +41,7 @@ public class MovieManiaApplication extends Application<MovieManiaConfiguration> 
     @Override
     public void initialize(final Bootstrap<MovieManiaConfiguration> bootstrap) {
         bootstrap.addBundle(hibernateBundle);
+        bootstrap.addBundle(swaggerBundle);
     }
 
     @Override
